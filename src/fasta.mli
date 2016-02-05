@@ -30,3 +30,6 @@ val random_mutation : int -> fasta -> fasta
 
 (** [print fasta] affiche le contenue de la structure [fasta]. La complexité de cette fonction est O(n)*)
 val print : fasta -> unit
+
+(** [extract_window l s fichier] affiche la liste de toutes les fenêtres de taille [l] en commençant par le premier nucléotide et en se déplaçant de [s] nucléotides à chaque fenêtre*)
+val extract_window : int -> int -> ('a * string) list -> ('a * string list) list

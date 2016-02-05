@@ -79,3 +79,26 @@ let print fasta =
     let name, dna = (get_name seq, get_dna seq) in
     Printf.printf ">%s\n%s\n" name dna
   in  iter p fasta
+
+let divise_chaine chaine longueur shift =
+	let rec aux liste = function
+		| i when (i+longueur) >= String.length chaine -> 
+				if ((String.sub chaine i longueur) == "")
+				then liste
+				else  (String.sub chaine i (String.length chaine - i)) :: liste
+		| i -> let liste2 = (String.sub chaine i longueur) :: liste
+				in aux liste2 (i + shift)
+ 	in List.rev(aux [] 0)
+
+let rec extract_windows longueur shift fasta =
+	match fasta with
+		| [] -> []
+		| (a,b)::suite ->  (a, divise_chaine b longueur shift) :: (extract_windows longueur shift suite)
+
+
+
+
+
+
+
+
