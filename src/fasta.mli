@@ -4,8 +4,7 @@ type sequence = string * string
 (** représentation d'un fichier fasta *)
 type fasta = sequence list
 
-(** rerpésentation d'une fenêtre : (coordonée de la 1ere nucléotide, coordonée de la 2éme nucléotide, chaine de nucléotide) *)
-type window = int * int * string
+
 
 (** [make_sequence n s] renvoie la séquence appelée [n] contenant la chaîne d'ADN [s]*)
 val make_sequence : string -> string -> sequence
@@ -34,5 +33,4 @@ val random_mutation : int -> fasta -> fasta
 (** [print fasta] affiche le contenue de la structure [fasta]. La complexité de cette fonction est O(n)*)
 val print : fasta -> unit
 
-(** [extract_windows l s fichier] renvoi la liste de toutes les fenêtres de taille [l] en commençant par le premier nucléotide et en se déplaçant de [s] nucléotides à chaque fenêtre*)
-val extract_windows : int -> int -> sequence list -> (string * window list) list
+

@@ -20,6 +20,10 @@ let list length fasta =
     (acc @ k_mers)
   in Fasta.fold_left p [] fasta
 
+let list_of_window length window =
+  let dna = Window.get_string window
+  in sub_seq dna length
+     
 let common list1 list2 =
   let sorted_list2 =  Array.of_list (List.sort compare list2) in
   let member_of_list2 k_mer = Array_mp.dicho_member k_mer compare sorted_list2 
@@ -53,16 +57,37 @@ let extract_ignored_nucl real_length ignored_index_list k_mer =
     | (ignored_index_list, list) -> (ignored_index_list, carac::list)
   in let _,result = String_mp.fold_left_i p k_mer (ignored_index_list,[])
      in String_mp.of_list (List.rev result)
-  
-let list_spaced seed fasta =
+
+
+let list_spaced_from_string seed string =
   let length = String.length seed
   and real_length = get_real_length seed
   and ignored_index = get_ignored_index seed in
-  let p acc seq =
-    let dna = Fasta.get_dna seq in
-    (* On extrait la liste des K_mers de la taille de la graine *)
-    let full_k_mers = sub_seq dna length in
-    (* Puis on enlève les nucléotides à ignoré pour que le K_mer corresponde au shéma de la graine*)
-    let k_mers = List.map (extract_ignored_nucl real_length ignored_index) full_k_mers
-    in acc @ k_mers
-  in Fasta.fold_left p [] fasta
+  let full_k_mers = sub_seq dna length in
+  let full_k_mers = sub_seq dna length
+  in List.map (extract_ignored_nucl real_length ignored_index) full_k_mers
+  
+let list_spaced seed fasta =
+  let p acc seq = 
+    let dna = Fasta.get_dna seq
+    in acc ^ dna
+  in let full_dna = Fasta.fold_left p "" fasta
+     in list_spaced_from_string seed full_dna
+
+let list_spaced_of_window seed window =
+  let window_string = Window.get_string window
+  in list_spaced_from_string seed window_string
+
+	    
+(* let list_spaced seed fasta = *)
+(*   let length = String.length seed *)
+(*   and real_length = get_real_length seed *)
+(*   and ignored_index = get_ignored_index seed in *)
+(*   let p acc seq = *)
+(*     let dna = Fasta.get_dna seq in *)
+(*     (\* On extrait la liste des K_mers de la taille de la graine *\) *)
+(*     let full_k_mers = sub_seq dna length in *)
+(*     (\* Puis on enlève les nucléotides à ignoré pour que le K_mer corresponde au shéma de la graine*\) *)
+(*     let k_mers = List.map (extract_ignored_nucl real_length ignored_index) full_k_mers *)
+(*     in acc @ k_mers *)
+(*   in Fasta.fold_left p [] fasta *)

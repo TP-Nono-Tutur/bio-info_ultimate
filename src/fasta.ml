@@ -1,6 +1,6 @@
 type sequence = string * string
 type fasta = sequence list
-type window = int * int * string
+
 		      
 let make_sequence name dna_string =
   (name, dna_string)
@@ -80,28 +80,3 @@ let print fasta =
     let name, dna = (get_name seq, get_dna seq) in
     Printf.printf ">%s\n%s\n" name dna
   in  iter p fasta
-
-
-let extract_window i length string =
-  let string_length = String.length string in
-  if i >= string_length
-  then None
-  else
-    let j =
-      match i with
-      | i when (i + length) >= string_length -> string_length - i
-      | i -> length
-    in let window_string = String.sub string i j
-       in Some (i, i + j, window_string)
-	   
-let divise_chaine string length shift =
-  let rec aux list i = 
-    match extract_window i length string with
-      None -> list
-     | Some window -> aux (window::list) (i + shift)
-  in List.rev (aux [] 0)
-
-let rec extract_windows longueur shift fasta =
-  match fasta with
-  | [] -> []
-  | (a,b)::suite ->  (a, divise_chaine b longueur shift) :: (extract_windows longueur shift suite)
