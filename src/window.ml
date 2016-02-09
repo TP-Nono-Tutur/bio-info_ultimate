@@ -40,7 +40,7 @@ let rec extract_from_fasta longueur shift fasta =
 
 
 let print window =
-  let i = Window.get_first_i window
-  and j = Window.get_second_i window
-  and string = Window.get_string window
+  let i = get_first_i window
+  and j = get_second_i window
+  and string = get_string window
   in Printf.printf "%d %s %d\n" (i+1) string (j+1)
