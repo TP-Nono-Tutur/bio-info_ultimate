@@ -1,6 +1,7 @@
 type sequence = string * string
 type fasta = sequence list
-
+type window = int * int * string
+		      
 let make_sequence name dna_string =
   (name, dna_string)
 
@@ -80,15 +81,25 @@ let print fasta =
     Printf.printf ">%s\n%s\n" name dna
   in  iter p fasta
 
-let divise_chaine chaine longueur shift =
-  let rec aux liste = function
-    | i when (i+longueur) >= String.length chaine ->
-       if i < String.length chaine
-       then (String.sub chaine i (String.length chaine - i)) :: liste
-       else liste
-    | i -> let liste2 = (String.sub chaine i longueur) :: liste
-	   in aux liste2 (i + shift)
-  in List.rev(aux [] 0)
+
+let extract_window i length string =
+  let string_length = String.length string in
+  if i >= string_length
+  then None
+  else
+    let j =
+      match i with
+      | i when (i + length) >= string_length -> string_length - i
+      | i -> length
+    in let window_string = String.sub string i j
+       in Some (i, i + j, window_string)
+	   
+let divise_chaine string length shift =
+  let rec aux list i = 
+    match make_window i length string with
+      None -> list
+     | Some window -> aux (window::list) (i + shift)
+  in List.rev (aux [] 0)
 
 let rec extract_windows longueur shift fasta =
   match fasta with
