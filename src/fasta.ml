@@ -96,7 +96,7 @@ let extract_window i length string =
 	   
 let divise_chaine string length shift =
   let rec aux list i = 
-    match make_window i length string with
+    match extract_window i length string with
       None -> list
      | Some window -> aux (window::list) (i + shift)
   in List.rev (aux [] 0)

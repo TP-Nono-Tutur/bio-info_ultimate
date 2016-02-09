@@ -6,7 +6,7 @@ type fasta = sequence list
 
 (** rerpésentation d'une fenêtre : (coordonée de la 1ere nucléotide, coordonée de la 2éme nucléotide, chaine de nucléotide) *)
 type window = int * int * string
-		      
+
 (** [make_sequence n s] renvoie la séquence appelée [n] contenant la chaîne d'ADN [s]*)
 val make_sequence : string -> string -> sequence
 		      
