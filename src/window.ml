@@ -36,4 +36,4 @@ let divise_chaine string length shift =
 let rec extract_from_fasta longueur shift fasta =
   match fasta with
   | [] -> []
-  | (a,b)::suite ->  (a, divise_chaine b longueur shift) :: (extract_windows longueur shift suite)
+  | (a,b)::suite ->  (a, divise_chaine b longueur shift) :: (extract_from_fasta longueur shift suite)
