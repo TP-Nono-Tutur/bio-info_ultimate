@@ -63,8 +63,8 @@ let list_spaced_from_string seed string =
   let length = String.length seed
   and real_length = get_real_length seed
   and ignored_index = get_ignored_index seed in
-  let full_k_mers = sub_seq dna length in
-  let full_k_mers = sub_seq dna length
+  let full_k_mers = sub_seq string length in
+  let full_k_mers = sub_seq string length
   in List.map (extract_ignored_nucl real_length ignored_index) full_k_mers
   
 let list_spaced seed fasta =
