@@ -11,3 +11,5 @@ val get_first_i : window -> int
 val get_second_i : window -> int
 
 val get_string : window -> string
+
+val print : window -> unit
