@@ -4,7 +4,7 @@ type k_mer = string
 val list : int -> Fasta.fasta -> k_mer list
 
 (** Comme [list] mais utilise une window au lieu d'un fasta *)
-val list_of_window : int -> window -> k_mer list
+val list_of_window : int -> Window.window -> k_mer list
 				       
 (** [list_spaced seed fasta] renvoie la liste de tout les k_mers correspondant au format décris par la graine [seed]. Sa complexité est [O(n)] avec [n], le nombre de nucléotides présentes dans la structure [fasta] *)
 val list_spaced : string -> Fasta.fasta -> k_mer list
