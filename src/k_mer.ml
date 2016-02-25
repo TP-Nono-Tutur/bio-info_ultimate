@@ -74,6 +74,12 @@ let list_spaced seed fasta =
   in let full_dna = Fasta.fold_left p "" fasta
      in list_spaced_from_string seed full_dna
 
+let list_spaced_multiple seed fasta =
+  let p acc seq = 
+    let dna = Fasta.get_dna seq
+    in  (Fasta.get_name seq, list_spaced_from_string seed dna)::acc
+  in List.rev (Fasta.fold_left p [] fasta)
+
 let list_spaced_of_window seed window =
   let window_string = Window.get_string window
   in list_spaced_from_string seed window_string

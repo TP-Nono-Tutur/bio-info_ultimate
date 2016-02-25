@@ -14,3 +14,5 @@ val list_spaced_of_window : string -> Window.window -> k_mer list
 						 
 (** [common l1 l2] renvoie la liste des K_mers de la liste [l1] présents dans la liste [l2]. Sa complexité est de [O(n * log(n))] avec [n], le nombre de nucléotide présentes dans la structure [fasta]*)
 val common : k_mer list -> k_mer list -> k_mer list
+
+val list_spaced_multiple : string -> Fasta.fasta -> (string * k_mer list) list 
