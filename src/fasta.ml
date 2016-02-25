@@ -20,6 +20,8 @@ let of_file file =
   in let rec aux fasta_acc seq_name dna_acc =
        try
 	 match input_line input with
+	 | "" -> aux fasta_acc seq_name dna_acc
+	 | "\n" -> aux fasta_acc seq_name dna_acc
 	 | ligne when ligne.[0] = '>' ->
 	    let seq_name2 = remove_begin ligne in
 	    let fasta_acc2 = 
@@ -31,7 +33,7 @@ let of_file file =
 	    in
 	    aux fasta_acc2 seq_name2 ""
 	 | ligne ->
-	    aux fasta_acc seq_name (dna_acc ^ ligne)
+	    aux fasta_acc seq_name (dna_acc ^ (String.uppercase ligne))
        with
        | End_of_file ->
 	  let seq = make_sequence seq_name dna_acc
