@@ -33,4 +33,5 @@ val random_mutation : int -> fasta -> fasta
 (** [print fasta] affiche le contenue de la structure [fasta]. La complexité de cette fonction est O(n)*)
 val print : fasta -> unit
 
-
+(** [extract_first_seq fasta] extraie la première sequence d'un fasta*)
+val extract_first_seq : fasta -> sequence

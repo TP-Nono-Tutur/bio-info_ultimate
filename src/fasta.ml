@@ -1,3 +1,5 @@
+exception NoSequence
+
 type sequence = string * string
 type fasta = sequence list
 
@@ -82,3 +84,10 @@ let print fasta =
     let name, dna = (get_name seq, get_dna seq) in
     Printf.printf ">%s\n%s\n" name dna
   in  iter p fasta
+
+
+let extract_first_seq fasta =
+  try 
+    List.hd fasta
+  with
+    _ -> raise NoSequence
