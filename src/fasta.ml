@@ -1,6 +1,5 @@
 exception NoSequence
 
-
 type t = Sequence.t list
 		      
 (* retire le chevron du nom d'une séquence *)

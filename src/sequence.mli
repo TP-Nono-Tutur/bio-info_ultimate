@@ -10,3 +10,6 @@ val get_name : t -> string
 (** [get_dna seq] renvoie la chaîne d'ADN de la séquence [seq]*)
 val get_dna : t -> string
 
+(** [to_suffix_array seq] extrait le tableau des suffixe de la sequence [seq]*)
+val extract_suffix_array : t -> int array
+			       
