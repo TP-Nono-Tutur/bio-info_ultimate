@@ -1,4 +1,4 @@
-type window = int * int * string
+type t = int * int * string
 
 let make i j s = (i,j,s)
 

@@ -1,18 +1,8 @@
 exception NoSequence
 
-type sequence = string * string
-type fasta = sequence list
 
+type t = Sequence.t list
 		      
-let make_sequence name dna_string =
-  (name, dna_string)
-
-let get_name seq =
-  let (name, _) = seq in name
-
-let get_dna seq =
-  let (_, dna) = seq in dna
-
 (* retire le chevron du nom d'une séquence *)
 let remove_begin ligne =
   String.sub ligne 1 ((String.length ligne) - 1)
