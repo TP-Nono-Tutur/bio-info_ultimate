@@ -20,7 +20,7 @@ let of_file file =
 	      match seq_name with 
 		"" -> fasta_acc
 	      | _ -> 
-		 let seq = make_sequence seq_name dna_acc in
+		 let seq = Sequence.make seq_name dna_acc in
 		 (seq::fasta_acc)
 	    in
 	    aux fasta_acc2 seq_name2 ""
@@ -28,7 +28,7 @@ let of_file file =
 	    aux fasta_acc seq_name (dna_acc ^ (String.uppercase ligne))
        with
        | End_of_file ->
-	  let seq = make_sequence seq_name dna_acc
+	  let seq = Sequence.make seq_name dna_acc
 	  in List.rev (seq::fasta_acc)
      in aux [] "" ""
 
@@ -60,18 +60,18 @@ let dna_random_mutation nombre_mutations genome =
     genome
 
 let seq_random_mutation n seq =
-  let name, dna = (get_name seq, get_dna seq) in
+  let name, dna = (Sequence.get_name seq, Sequence.get_dna seq) in
   let dna_mutated = dna_random_mutation n dna 
   in (name ^ "-mutated", dna_mutated)
 
 let random_mutation n = function
   | [] -> []
   | seq::tail -> (seq_random_mutation n seq)::tail
-(* print_endline (get_dna seq) in *)
+(* print_endline (Sequence.get_dna seq) in *)
 let print fasta =
 
   let p seq =
-    let name, dna = (get_name seq, get_dna seq) in
+    let name, dna = (Sequence.get_name seq, Sequence.get_dna seq) in
     Printf.printf ">%s\n%s\n" name dna
   in  iter p fasta
 
