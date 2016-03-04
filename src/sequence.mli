@@ -12,4 +12,7 @@ val get_dna : t -> string
 
 (** [to_suffix_array seq] extrait le tableau des suffixe de la sequence [seq]*)
 val extract_suffix_array : t -> int array
+
+(** [search read_seq seq] recherche dans la sequence [seq] la chaine [read_seq] et renvoi la liste des indice de début de chaque sous chaine correspondante dans la sequence *)
+val search : string -> t -> int list
 			       
