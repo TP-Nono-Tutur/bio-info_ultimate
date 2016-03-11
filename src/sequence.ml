@@ -72,7 +72,21 @@ let search read_seq seq =
        Some i -> [i]
      | None -> []
 
+let bwt seq =
+  let dna_string = get_dna seq in
+  let length = String.length dna_string in
+  let rec aux acc string = function
+    | i when i = length -> acc
+    | i -> let new_string = String_mp.rotate string
+	   in aux (List_mp.insert new_string) new_string (i+1)
+  in let bwt_list = aux [dna_string] dna_string in
+     let p acc string = (string.[length]::acc)
+     in String_mp.of_list(List.fold_left p [] bwt_list)
+       
 
+  
+
+		 
 		 
       (* let substring = String.sub dna_string suffix_array.(milieu) read_length   *)
       (* in match compare substring read_seq with *)

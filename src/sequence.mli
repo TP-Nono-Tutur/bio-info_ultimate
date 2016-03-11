@@ -15,4 +15,6 @@ val extract_suffix_array : t -> int array
 
 (** [search read_seq seq] recherche dans la sequence [seq] la chaine [read_seq] et renvoi la liste des indice de début de chaque sous chaine correspondante dans la sequence *)
 val search : string -> t -> int list
-			       
+
+(** [bwt s] renvoi la bwt de la chaine [s]*)
+val bwt : t -> string
