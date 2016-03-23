@@ -73,20 +73,43 @@ let search read_seq seq =
      | None -> []
 
 let bwt seq =
-  let dna_string = get_dna seq in
+  let dna_string = (get_dna seq) ^ "$" in
   let length = String.length dna_string in
   let rec aux acc string = function
     | i when i = length -> acc
     | i -> let new_string = String_mp.rotate string
-	   in aux (List_mp.insert new_string) new_string (i+1)
-  in let bwt_list = aux [dna_string] dna_string in
-     let p acc string = (string.[length]::acc)
-     in String_mp.of_list(List.fold_left p [] bwt_list)
+	   in aux (List_mp.insert compare new_string acc) new_string (i+1)
+  in let bwt_list = aux [] dna_string 0 in
+     let p acc string = (string.[length - 1]::acc)
+     in String_mp.of_list(List.rev (List.fold_left p [] bwt_list))
        
+let rec distribution l1 l2 =
+  match (l1,l2) with
+    ([],l2) -> []
+   |(l1,[]) -> []
+   |(x::r1,y::r2) -> (x^y) ::distribution r1 r2
 
-  
+let rec distribution l1 l2 =
+  match (l1,l2) with
+    ([],l2) -> []
+   |(l1,[]) -> []
+   |(x::r1,y::r2) -> (x::y) ::distribution r1 r2
+					  
+let rec extract_real_string = function 
+  | [] -> None
+  | (c::s)::_ when c = '$' -> Some s
+  | _::tl -> extract_real_string tl
 
-		 
-		 
-      (* let substring = String.sub dna_string suffix_array.(milieu) read_length   *)
-      (* in match compare substring read_seq with *)
+					   
+let unbwt s =
+  let t = String_mp.to_list s
+  and length = String.length s in
+  let rec aux acc = function
+    | i when i = length - 1 -> acc
+    | i -> let acc2 = List.sort compare acc in
+	   aux (distribution t acc2) (i+1)
+  in let result_list = aux (List.map (fun x -> [x]) t) 0 
+     (* List_mp.display print_endline list; *)
+     in match extract_real_string result_list with
+	  None -> ""
+	| Some real_string -> String_mp.of_list real_string

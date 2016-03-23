@@ -18,3 +18,6 @@ val search : string -> t -> int list
 
 (** [bwt s] renvoi la bwt de la chaine [s]*)
 val bwt : t -> string
+
+(** [unbwt s_bwt] renvoi la chaine original à partir de sa bwt [s]*)
+val unbwt : string -> string
