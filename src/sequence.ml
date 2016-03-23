@@ -21,7 +21,7 @@ let extract_suffixes string =
        in aux ((i, substring)::acc) (i + 1)
   in List.rev (aux [] 0)
 			  
-let extract_suffix_array seq =
+let extract_suffix_array_naive seq =
   let dna_string = get_dna seq in
   let suffix_list = extract_suffixes (dna_string^"$") in
   (*trie de la liste des suffixe*)
@@ -30,6 +30,19 @@ let extract_suffix_array seq =
   List.iter (fun (a,b) -> Printf.printf "%d,%s\n" a b) sorted_suffix_list;
   let i_list = List.map (fun (i, _) -> i) sorted_suffix_list in
   Array.of_list i_list
+
+let extract_suffix_array seq =
+  let dna_string = (get_dna seq)^"$" in
+  let suffix_list = List_mp.seq 1 (String.length dna_string) in
+  (*trie de la liste des suffixe*)
+  let f i1 i2 =
+    let s1 = String.sub dna_string (i1 - 1) ((String.length dna_string) - i1 + 1)
+    and s2 = String.sub dna_string (i2 - 1) ((String.length dna_string) - i2 + 1)
+    in compare s1 s2 in
+  let sorted_suffix_list = List.sort f suffix_list in
+  (* List.iter print_int sorted_suffix_list; *)
+  (* let i_list = List.map (fun (i, _) -> i) sorted_suffix_list in *)
+  Array.of_list sorted_suffix_list
 
 
 
@@ -72,17 +85,24 @@ let search read_seq seq =
        Some i -> [i]
      | None -> []
 
-let bwt seq =
+let bwt_naive seq =
   let dna_string = (get_dna seq) ^ "$" in
   let length = String.length dna_string in
   let rec aux acc string = function
     | i when i = length -> acc
     | i -> let new_string = String_mp.rotate string
-	   in aux (List_mp.insert compare new_string acc) new_string (i+1)
-  in let bwt_list = aux [] dna_string 0 in
+	   in aux (new_string::acc) new_string (i+1)
+  in let bwt_list = List.sort compare (aux [] dna_string 0) in
      let p acc string = (string.[length - 1]::acc)
      in String_mp.of_list(List.rev (List.fold_left p [] bwt_list))
-       
+
+
+let bwt seq = 
+  let fake_dna_string = "$" ^ (get_dna seq) in
+  let array_suffix = extract_suffix_array seq in
+  let p acc i = fake_dna_string.[i - 1]::acc
+  in String_mp.of_list (List.rev (Array.fold_left p [] array_suffix))
+			 
 let rec distribution l1 l2 =
   match (l1,l2) with
     ([],l2) -> []
