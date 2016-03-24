@@ -45,9 +45,11 @@ let compare_sub s i1 i2 =
 let extract_suffix_array seq =
   let dna_string = (get_dna seq)^"$" in
   let suffix_list = List_mp.seq 1 (String.length dna_string) in
+  Printf.printf "base list générée\n";
   (*trie de la liste des suffixe*)
   let f i1 i2 = compare_sub dna_string (i1 - 1) (i2 - 1) in
   let sorted_suffix_list = List.sort f suffix_list in
+  Printf.printf "suffix list générée\n";
   Array.of_list sorted_suffix_list
 
 	 
