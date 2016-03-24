@@ -13,8 +13,6 @@ let of_file file =
 	 match input_line input with
 	 | "" -> aux fasta_acc seq_name dna_acc
 	 | "\n" -> aux fasta_acc seq_name dna_acc
-	 | ligne when ligne.[0] = 'N' -> aux fasta_acc seq_name dna_acc
-	 | ligne when ligne.[69] = 'N' -> aux fasta_acc seq_name dna_acc
 	 | ligne when ligne.[0] = '>' ->
 	    let seq_name2 = remove_begin ligne in
 	    let fasta_acc2 = 
@@ -25,6 +23,8 @@ let of_file file =
 		 (seq::fasta_acc)
 	    in
 	    aux fasta_acc2 seq_name2 ""
+	 | ligne when ligne.[0] = 'N' -> aux fasta_acc seq_name dna_acc
+	 | ligne when ligne.[(String.length ligne) - 1] = 'N' -> aux fasta_acc seq_name dna_acc
 	 | ligne ->
 	    aux fasta_acc seq_name (dna_acc ^ (String.uppercase ligne))
        with
