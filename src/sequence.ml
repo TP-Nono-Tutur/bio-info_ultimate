@@ -31,18 +31,38 @@ let extract_suffix_array_naive seq =
   let i_list = List.map (fun (i, _) -> i) sorted_suffix_list in
   Array.of_list i_list
 
+(* compare deux sous chaine présent dans la chaine [s] commençant respectivement au caractére d'indice i1 et i2*)
+let compare_sub s i1 i2 =
+  let max = (String.length s) - 1 in
+  let rec aux i j =
+    if (i = max) || (j = max)
+    then compare i2 i1
+    else match compare s.[i] s.[j] with
+	 | 0 -> aux (i+1) (j+1)
+	 | n -> n
+  in aux i1 i2
+
 let extract_suffix_array seq =
   let dna_string = (get_dna seq)^"$" in
   let suffix_list = List_mp.seq 1 (String.length dna_string) in
   (*trie de la liste des suffixe*)
-  let f i1 i2 =
-    let s1 = String.sub dna_string (i1 - 1) ((String.length dna_string) - i1 + 1)
-    and s2 = String.sub dna_string (i2 - 1) ((String.length dna_string) - i2 + 1)
-    in compare s1 s2 in
+  let f i1 i2 = compare_sub dna_string (i1 - 1) (i2 - 1) in
   let sorted_suffix_list = List.sort f suffix_list in
-  (* List.iter print_int sorted_suffix_list; *)
-  (* let i_list = List.map (fun (i, _) -> i) sorted_suffix_list in *)
   Array.of_list sorted_suffix_list
+
+	 
+(* let extract_suffix_array seq = *)
+(*   let dna_string = (get_dna seq)^"$" in *)
+(*   let suffix_list = List_mp.seq 1 (String.length dna_string) in *)
+(*   (\*trie de la liste des suffixe*\) *)
+(*   let f i1 i2 =  *)
+(*     let s1 = String.sub dna_string (i1 - 1) ((String.length dna_string) - i1 + 1) *)
+(*     and s2 = String.sub dna_string (i2 - 1) ((String.length dna_string) - i2 + 1) *)
+(*     in compare s1 s2 in *)
+(*   let sorted_suffix_list = List.sort f suffix_list in *)
+(*   (\* List.iter print_int sorted_suffix_list; *\) *)
+(*   (\* let i_list = List.map (fun (i, _) -> i) sorted_suffix_list in *\) *)
+(*   Array.of_list sorted_suffix_list *)
 
 
 
@@ -66,7 +86,24 @@ let compareBegining i s1 s2 =
      in compare substring s2
 		    
 
-		
+
+let search_with_array read_seq seq suffix_array = 
+  let dna_string = get_dna seq
+  and read_length = String.length read_seq in
+  let array_length = Array.length suffix_array in
+  let rec dicho debut fin =
+    if debut > fin then
+      None
+    else
+      let milieu = (debut + fin) / 2 in
+      match compareBegining suffix_array.(milieu) dna_string read_seq with
+  	0 -> Some suffix_array.(milieu)
+      | -1 -> dicho (milieu + 1) fin
+      | _ -> dicho debut (milieu - 1)
+  in match dicho 0 array_length with
+       Some i -> [i]
+     | None -> []
+		 
 let search read_seq seq = 
   let dna_string = get_dna seq
   and suffix_array = extract_suffix_array seq
