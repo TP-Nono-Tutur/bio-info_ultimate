@@ -9,31 +9,31 @@ let remove_begin ligne =
 let of_file file =
   let input = open_in file in
   let dna_acc = Bytes.create (in_channel_length input)
-  in let rec aux fasta_acc seq_name pos =
+  and fasta_acc = ref []
+  in let rec aux seq_name pos =
        try
 	 match input_line input with
-	 | "" -> aux fasta_acc seq_name pos
-	 | "\n" -> aux fasta_acc seq_name pos
+	 | "" -> aux seq_name pos
+	 | "\n" -> aux seq_name pos
 	 | ligne when ligne.[0] = '>' ->
 	    let seq_name2 = remove_begin ligne in
-	    let fasta_acc2 = 
-	      match seq_name with 
-		"" -> fasta_acc
+	      (match seq_name with 
+		"" -> ()
 	      | _ -> 
 		 let seq = Sequence.make seq_name (String.uppercase (Bytes.sub_string dna_acc 0 pos)) in
-		 (seq::fasta_acc)
-	    in aux fasta_acc2 seq_name2 0
-	 | ligne when ligne.[0] = 'N' -> aux fasta_acc seq_name pos
-	 | ligne when ligne.[(String.length ligne) - 1] = 'N' -> aux fasta_acc seq_name pos
+		 fasta_acc := seq::(!fasta_acc));
+	      aux seq_name2 0
+	 | ligne when ligne.[0] = 'N' -> aux seq_name pos
+	 | ligne when ligne.[(String.length ligne) - 1] = 'N' -> aux seq_name pos
 	 | ligne ->
 	    let length = String.length ligne in
 	    Bytes.blit_string ligne 0 dna_acc pos length;
-	    aux fasta_acc seq_name (pos + length)
+	    aux seq_name (pos + length)
        with
        | End_of_file ->
 	  let seq = Sequence.make seq_name  (String.uppercase (Bytes.sub_string dna_acc 0 pos))
-	  in List.rev (seq::fasta_acc)
-     in aux [] "" 0
+	  in List.rev (seq::(!fasta_acc))
+     in aux "" 0
 
 let iter = List.iter
 let fold_left = List.fold_left
