@@ -1,3 +1,5 @@
+open Monade_pack
+
 exception NoSequence
 
 type t = Sequence.t list
@@ -5,6 +7,22 @@ type t = Sequence.t list
 (* retire le chevron du nom d'une séquence *)
 let remove_begin ligne =
   String.sub ligne 1 ((String.length ligne) - 1)
+
+let of_fastq file =
+  let input = open_in file
+    in let rec read4line fastq_acc seq_name i =
+	 match Option.safe input_line input with
+	   Some line ->
+	   begin 
+	     match i with
+	       0 -> read4line fastq_acc (remove_begin line) 1
+	     | 1 -> let seq = Sequence.make seq_name line
+		    in read4line (seq::fastq_acc) "" 2
+	     | 2 -> read4line fastq_acc seq_name 3
+	     | 3 -> read4line fastq_acc seq_name 0
+	   end
+	 | None -> fastq_acc
+       in List.rev (read4line [] "" 0)
 
 let of_file file =
   let input = open_in file in
